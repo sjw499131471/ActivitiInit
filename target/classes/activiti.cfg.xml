@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/contex http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!--数据源配置dbcp-->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/activiti"/>
+        <property name="username" value="root"/>
+        <property name="password" value="123"/>
+    </bean>
+    <!--activiti单独运行的ProcessEngine配置对象(processEngineConfiguration),使用单独启动方式
+        默认情况下：bean的id=processEngineConfiguration
+    -->
+
+    <bean id="processEngineConfiguration" class="org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration">
+        <!--代表数据源-->
+        <property name="dataSource" ref="dataSource"></property>
+
+        <!--
+         关于 processEngineConfiguration 中的 databaseSchemaUpdate 参数， 通过此参数设计 activiti
+            数据表的处理策略，参数如下：
+            false（默认）：检查数据库表的版本和依赖库的版本， 如果版本不匹配就抛出异常。
+            true: 构建流程引擎时，执行检查，如果需要就执行更新。 如果表不存在，就创建。
+            create-drop: 构建流程引擎时创建数据库表， 关闭流程引擎时删除这些表。
+            drop-create：先删除表再创建表。
+            create: 构建流程引擎时创建数据库表， 关闭流程引擎时不删除这些表。
+         -->
+
+        <!--代表是否生成表结构-->
+        <property name="databaseSchemaUpdate" value="true"/>
+
+    </bean>
+</beans>
